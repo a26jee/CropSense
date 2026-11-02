@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10251d"><title>CropSense — Crop Recommendation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- <body><aside class="sidebar">
+<a class="brand" href="#home"><span class="brand-icon">✳</span><span>Crop<span class="pale">Sense</span><small>INTELLIGENT AGRICULTURE</small></span></a> -->
+<!-- <div class="nav-caption">WORKSPACE</div><nav><a class="active" href="#home">⌂ &nbsp; Overview</a><a href="#predict">⌁ &nbsp; Crop prediction</a><a href="#analytics">▥ &nbsp; Model analytics</a></nav> -->
+<!-- <div class="side-bottom"><div class="online"><i></i> Prediction engine ready</div><p>A machine learning project for data-driven crop recommendations.</p><small>LOCAL APPLICATION · V1.0</small></div></aside> -->
+<!-- <main><header><span>Workspace <b>/</b> <strong>Overview</strong></span><span class="online-top"><i></i> ML engine online <em id="today"></em></span></header> -->
+<section id="home" class="section">
+<div class="hero"><h1>Grow smarter.<br><i>Choose better.</i></h1></div></div>
+<div class="section-head"><div><label>AT A GLANCE</label><h2>Project snapshot</h2></div><small>LIVE MODEL METADATA</small></div>
+<div class="stats"><article><span class="stat-icon green">▤</span><label>Dataset records</label><strong id="rows">—</strong><small>Rows in source dataset</small></article><article><span class="stat-icon gold">❋</span><label>Crop categories</label><strong id="classes">—</strong><small>Unique crop labels</small></article><article><span class="stat-icon blue">◈</span><label>Best test accuracy</label><strong id="accuracy">—</strong><small>Held-out test set</small></article><article><span class="stat-icon violet">✦</span><label>Selected algorithm</label><strong class="model-value" id="bestModel">—</strong><small>Selected using CV macro F1</small></article></div>
+</section>
+<section id="predict" class="section">
+<div class="section-head"><div><label>01 / CROP DISCOVERY</label><h2>Find your crop match</h2><p>Enter the seven measurements. The app automatically uses the best-performing trained model.</p></div><small class="pill">7 INPUT FEATURES</small></div>
+<div class="prediction-grid"><form id="form" class="panel"><div class="panel-title"><div><h3>Soil &amp; climate inputs</h3><p>Use values from your soil test and local measurements.</p></div><b>01</b></div>
+<div class="fields">
+<label>Nitrogen <small>N</small><div><input name="N" type="number" step="any" placeholder="e.g. 90" required><span>kg/ha</span></div></label>
+<label>Phosphorus <small>P</small><div><input name="P" type="number" step="any" placeholder="e.g. 42" required><span>kg/ha</span></div></label>
+<label>Potassium <small>K</small><div><input name="K" type="number" step="any" placeholder="e.g. 43" required><span>kg/ha</span></div></label>
+<label>Temperature<div><input name="temperature" type="number" step="any" placeholder="e.g. 24.5" required><span>°C</span></div></label>
+<label>Humidity<div><input name="humidity" type="number" step="any" placeholder="e.g. 80" required><span>%</span></div></label>
+<label>Soil pH<div><input name="ph" type="number" step="any" placeholder="e.g. 6.5" required><span>pH</span></div></label>
+<label class="wide">Rainfall<div><input name="rainfall" type="number" step="any" placeholder="e.g. 200" required><span>mm</span></div></label></div>
+<div class="actions"><button id="submit" type="submit">Generate recommendation <b>↗</b></button><button class="reset" type="reset">Clear inputs</button></div><p class="hint">All seven values are required. Use the units shown.</p><div id="error" role="alert"></div></form>
+<aside class="result panel"><div class="result-head"><label>YOUR RECOMMENDATION</label><span>✳</span></div><div id="empty" class="empty"><div>🌱</div><h3>Your result will<br>grow here.</h3><p>Complete the input fields and run the prediction to see the crop recommended by the ML model.</p></div>
+<div id="result" class="hidden"><div class="check">✓</div><label>RECOMMENDED CROP</label><h2 id="crop">—</h2><p class="result-desc">The selected model predicts this crop for the supplied conditions.</p><hr><div class="prob-head"><span>Model-estimated probability</span><b id="prob">—</b></div><div class="track"><i id="probbar"></i></div><div id="alternatives"></div><div class="model-used">MODEL USED<strong id="used">—</strong></div><p class="disclaimer">Probabilities are model estimates, not guarantees of crop suitability or yield.</p></div></aside></div>
+</section>
+<section id="analytics" class="section">
+<div class="section-head"><div><h2>Model Statistics</h2><p>Compare the three classifiers and inspect the selected model's performance.</p></div><small class="pill">3 CLASSIFIERS</small></div>
+<div class="analytics"><article class="panel"><div class="card-head"><div><h3>Model comparison</h3><p>Held-out test-set accuracy</p></div><small>● ACCURACY</small></div><div id="bars" class="bars"><div class="loading"></div></div><p class="footnote">Model selection uses 5-fold cross-validation macro F1, not test accuracy.</p></article>
+<article class="panel"><div class="card-head"><div><h3>Selected model scores</h3><p id="selectedLabel">Best model</p></div><small class="tag">TEST SET</small></div><div id="scores" class="scores"><div class="loading"></div></div></article>
+<article class="panel distribution-panel"><div class="card-head"><div><h3>Dataset class distribution</h3><p>Number of records per crop label</p></div><small class="tag">SOURCE DATA</small></div><div class="distribution"><strong id="total">—</strong><span>total records</span></div><div id="chips" class="chips"></div></article><br>
+<!-- <article class="panel"><div class="card-head"><div><h3>How the model is selected</h3><p>Training and evaluation workflow</p></div><small class="tag">METHODOLOGY</small></div><div class="steps"><div><b>01</b><span><strong>Train / test split</strong><small>80% training · 20% testing</small></span></div><i></i><div><b>02</b><span><strong>5-fold stratified cross-validation</strong><small>Compare macro F1 across six classifiers</small></span></div><i></i><div><b>03</b><span><strong>Select the best model</strong><small>Highest mean CV macro F1-score</small></span></div><i></i><div><b>04</b><span><strong>Evaluate and deploy</strong><small>Report test metrics and serve predictions</small></span></div></div></article></div> -->
+<!-- <article class="panel matrix-panel"><div class="card-head"><div><h3>Confusion matrix</h3><p>Selected model · held-out test set</p></div><small class="tag">22 × 22</small></div><p class="matrix-note">Rows are actual crop labels; columns are predicted labels. Diagonal values are correct classifications.</p><div class="matrix-scroll"><div id="matrix" class="matrix"></div></div><div class="matrix-axis">ACTUAL LABEL ↓ &nbsp;&nbsp; PREDICTED LABEL →</div></article> -->
+<footer><div style="align-items: center;"><a href="#home">Back to top</a></div></footer>
+<div>
+    <br><br><br>
+</div>
+</section></main><script src="{{ url_for('static', filename='app.js') }}"></script></body></html>
